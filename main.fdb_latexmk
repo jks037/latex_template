@@ -6,10 +6,10 @@
   (generated)
   "main.bbl"
   "main.blg"
-["pdflatex"] 1634902312 "d:/chh/statistical learning/projects/latex_template/main.tex" "main.pdf" "main" 1634902312
+["pdflatex"] 1634959412 "d:/chh/statistical learning/projects/latex_template/main.tex" "main.pdf" "main" 1634959412
   "cvpr.sty" 1625350944 8185 9c85e63bb1830fdefeac27370f229c9e ""
   "cvpr_eso.sty" 1625350944 3878 6aa7c08ff2621006e0603349e40a30a8 ""
-  "d:/chh/statistical learning/projects/latex_template/main.tex" 1634902307 6694 d3e8afde02a567d8bed4f3c14fdc6fd4 ""
+  "d:/chh/statistical learning/projects/latex_template/main.tex" 1634959407 7156 3237438051f987994ea8dc582e8f9af7 ""
   "d:/environments/texlive/2021/texmf-dist/fonts/enc/dvips/base/8r.enc" 1634181226 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "d:/environments/texlive/2021/texmf-dist/fonts/map/fontname/texfonts.map" 1634181627 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "d:/environments/texlive/2021/texmf-dist/fonts/tfm/adobe/helvetic/phvb.tfm" 1634181925 2300 14616918391efa49ac8b481a75fbdc1a ""
@@ -119,11 +119,11 @@
   "d:/environments/texlive/2021/texmf-var/web2c/pdftex/pdflatex.fmt" 1634185661 2797775 117a1cb75f9563587bce13572f84cc30 ""
   "d:/environments/texlive/2021/texmf.cnf" 1634185561 713 baa45e065482d44c4cd81b98ef72c63b ""
   "eso-pic.sty" 1625350944 9460 d2935ae95b5cd343fcf5887ff530288d ""
-  "main.aux" 1634902312 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "main.aux" 1634959412 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
   "main.bbl" 0 -1 0 "bibtex main"
   "main.out" 0 -1 0 "pdflatex"
   (generated)
-  "main.pdf"
-  "main.log"
   "main.out"
   "main.aux"
+  "main.log"
+  "main.pdf"

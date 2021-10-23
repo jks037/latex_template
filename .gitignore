@@ -1,3 +1,6 @@
 main.aux
 main.out
 main.pdf
+main.fdb_latexmk
+main.log
+main.synctex.gz
