@@ -44,61 +44,63 @@ $^*$ Shanghai Jiao Tong University \\
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-
+Midterm report of Statistical Learning and Inference.
 \end{abstract}
 
 %%%%%%%%% BODY TEXT
 
 \section{Introduction}
-%（~\cite{chen2020weak}）
-Deep learning has been successefully applied to a variaty of computer vision researchs and huge amout of powerful tools. However, the training of deep learning models relies much on well labeled datases. Though large commertial entities such as Google and Alibaba investigate a lot on collection of data sets, considering the endless fine-grained categories, the lack of well-labeled data sets is inevitable. A strategy alleviates this data-hungry problem is called weakly-supervised learning is to first gain informations from  fully-annotated training samples (base categories), then transfer the gained information to novel categories which have little or even no overlap with the original training samples.Previous research on this topic includes zero-shot learning, few-shot learning, weakly0supervised learning and semi-supervised learning. 
+
+Deep learning has been successefully applied to a variaty of computer vision researchs and huge amout of powerful tools. However, the training of deep learning models relies much on well labeled datases. Though large commertial entities such as Google and Alibaba investigate a lot on collection of data sets, considering the endless fine-grained categories, the lack of well-labeled data sets is inevitable. A strategy alleviates this data-hungry problem called weakly-shot learning~\cite{chen2020weak} is to first gain informations from  fully-annotated training samples (base categories), then transfer the gained information to novel categories which have little or even no overlap with the original training samples.Previous research on this topic includes zero-shot learning, few-shot learning and weakly-supervised learning. 
 
 %zero-shot and few-shot learning intro, remain to modified according to related word section
 Zero-shot learning and few-shot learning attempt to utility training samples with limited quantities. To solve the problem of distiction between base categories and nove categories, zero-shot learning extract category-leve semantic representations such as word vectors for all categories. Few-shot learning gains clue from small-sized clean examples (for example 5 or 10) in novel categories. Though succeed in some categories, they have several disadvantages:1. Annotating attributes needed for zero-shot learning and well-labeled samples (even few) are not always available;2.Attributes like word vectors are free, but are sometimes ambiguous due to the nature of language (for example one word has multiple meanings). These will affect the final effectiveness of training.
 
+Webly-supervised learning is another category of method trying to solve the problem of data-hunger problem. At the first place, it is invented for a cool task of learning everything about anything~\cite{Divvala2014} by utilizing search engines for gains of training data. Huge amount of images is easily found this way with low cost with the cost of quality. Main challenge of webly-supervised learning is how to take use of these huge data of low quality. Methods proposed include improving the quality through image-process technologies~\cite{Liu2014,Xia2015}, designing specified training method to reduce the negative effect of noise~\cite{Volodymyr2012,NEURIPS2018_f2925f97,Patrini2017,Zhuang2017}, and so on~\cite{SunCY19,YaoW0T019,KrauseSHZTDPF16}.
+
+Weak-shot learning is one kind weakly supervised learning that utilizing auxiliary fully supervised base categories. Several types of weak-shot learning are under consistent research. Weak-Shot Object Detection focus on providing bounding boxes for fine-grained categories. Main idea of methods propsed~\cite{NIPS2014_09fb05dd,KuenPLZT19,RochanW15} is to transfers information gained from bounding box annotated data to classifiers for categories without them. Similarly, Weak-Shot instance segmentation transfers information gained from mask annotated data to training on box annotated data. Methods proposed accomplish this transfer by weight transfer function~\cite{Hu2018LSET}, shape priors~\cite{Kuo2019}, and instance saliency~\cite{Zhou2020Sal}.
+
 %some other related works. the pharagragh below is completely copied, remain to be replaced
-Considering the drawbacks of zero/few-shot learning and the accessibility of free web data, we intend to learn novel
-categories by virtue of web data with the support of a clean set of base categories, which is referred to as weak-shot
-learning as illustrated in Figure 1. Formally, given a set of novel fine-grained categories which are not associated with
-any clean training images, we collect web images for novel categories as weak-labeled images and meanwhile leverage the clean images from base fine-grained categories. We refer to the clean (resp., web) image set from base (resp., novel)
-categories as base (resp., novel) training set. The closest related work to ours is (Niu, Veeraraghavan, and Sabharwal 2018), but they further assumed the reliability of word vectors (Mikolov et al. 2013; Pennington, Socher, and Manning arXiv:2009.09197v1 [cs.CV] 19 Sep 2020 2014) as well as the availability of unlabeled test images in the training stage.
-In this learning scenario, the key issue of novel training set is label noise, which will significantly degrade the performance of learnt classifier (Niu, Veeraraghavan, and Sabharwal 2018; Zhuang et al. 2017; Patrini et al. 2017; Zhang,
-Wang, and Qiao 2019). We explore using base training set to denoise novel training set, although they have disjoint category sets. As illustrated in Figure 2, our proposed framework employs the pairwise semantic similarity to bridge the
-gap between base categories and novel categories. The pairwise similarity which denotes whether two images belong
-to the same category is category-agnostic, so it is highly transferable across category sets even if they are disjoint.
-Meanwhile, the pairwise similarity can be easily learnt fromlimited data, indicating that a small set of already annotated
-images could help learn extensive novel categories.
-Analogously, some methods (Chen et al. 2020; Oreshkin, Lopez, and Lacoste 2018) for few-shot learning transferred similarity from base categories to novel categories, which is directly used for classification. In contrast, we transfer the pairwise similarity to alleviate the label noise issue of web data. For learning from web data, some works (Sheng Guo and Huang 2018; Han, Luo, and Wang 2019) also attempted to denoise by similarity. But their similarities are derived from noisy samples (e.g., feature distances of a model pre-trained on web data), and likely to be corrupted due to noise overfitting, leading to sub-optimal results (Kuang-Huei Lee
-and Yang 2018; Xiao et al. 2015).
+%Considering the drawbacks of zero/few-shot learning and the accessibility of free web data, we intend to learn novel categories by virtue of web data with the support of a clean set of base categories, which is referred to as weak-shot learning as illustrated in Figure 1. Formally, given a set of novel fine-grained categories which are not associated with any clean training images, we collect web images for novel categories as weak-labeled images and meanwhile leverage the clean images from base fine-grained categories. We refer to the clean (resp., web) image set from base (resp., novel) categories as base (resp., novel) training set. The closest related work to ours is (Niu, Veeraraghavan, and Sabharwal 2018), but they further assumed the reliability of word vectors (Mikolov et al. 2013; Pennington, Socher, and Manning arXiv:2009.09197v1 [cs.CV] 19 Sep 2020 2014) as well as the availability of unlabeled test images in the training stage. In this learning scenario, the key issue of novel training set is label noise, which will significantly degrade the performance of learnt classifier (Niu, Veeraraghavan, and Sabharwal 2018; Zhuang et al. 2017; Patrini et al. 2017; Zhang, Wang, and Qiao 2019). We explore using base training set to denoise novel training set, although they have disjoint category sets. As illustrated in Figure 2, our proposed frame-work employs the pairwise semantic similarity to bridge the gap between base categories and novel categories. The pairwise similarity which denotes whether two images belong to the same category is category-agnostic, so it is highly transferable across category sets even if they are disjoint. Meanwhile, the pairwise similarity can be easily learnt fromlimited data, indicating that a small set of already annotated images could help learn extensive novel categories. Analogously, some methods (Chen et al. 2020; Oreshkin, Lopez, and Lacoste 2018) for few-shot learning transferred similarity from base categories to novel categories, which is directly used for classification. In contrast, we transfer the pairwise similarity to alleviate the label noise issue of web data. For learning from web data, some works (Sheng Guo and Huang 2018; Han, Luo, and Wang 2019) also attempted to denoise by similarity. But their similarities are derived from noisy samples (e.g., feature distances of a model pre-trained on web data), and likely to be corrupted due to noise overfitting, leading to sub-optimal results (Kuang-Huei Lee and Yang 2018; Xiao et al. 2015).
 
 % introduction to method and concludes
-our proposals and results.
+In Weak-shot classification, the knowledge to transfer is the similarity trained in base data~\cite{chen2020weak}. Our proposals and results.
 
 
 \section{Related Works}
 \label{section:related}
-Weak-shot classification is a new conception with few article available. In this section we introduce related work from two aspects.Section 2.1 to 2.4 introduce similar methods attempt to lower the requirement of training samples. Section 2.5 to 2.6 introduce other applications of weak-shot learning bisides weak-shot classification.
+Weak-shot classification is a new conception with few article available. In this section we introduce related work from two aspects.Section~\ref{section:related:zero} to Section~\ref{section:related:webly} introduce similar methods attempt to lower the requirement of training samples.Section~\ref{section:related:weakDtct} to Section~\ref{section:related:seg} introduce other applications of weak-shot learning bisides weak-shot classification.
 
 \subsection{Zero-Shot learning}
 \label{section:related:zero}
 Zero-shot learning employs category-level semantic representation (e.g., word vector or annotated attributes) to bridge the gap between seen (resp., base) categories and unseen (resp., novel) categories. A large part of works [6, 17, 38, 59] learn a mapping between visual features and category-level semantic representations. Recently, zero-shot object detection [73, 10], zero-shot semantic segmentation [5, 19, 60], and zero-shot instance segmentation [67] have also been explored. Zero-shot learning relies on category-level semantic representations for both base categories and novel categories, which are not required by weak-shot learning.
-\subsection{few-Shot learning}
-\subsection{Weakly-supervised learning}
+\subsection{Few-Shot learning}
+
 \subsection{Webly-supervised learning}
+\label{section:related:webly}
+The conception of webly-supervised learning is first invented for a learning method gathering target pictures satisfying given quiries automatically from web search engines which are used to train virtual models telling whether a given picture is consistent with a given concept~\cite{Divvala2014}. Though not the main aim, its usage of pictures gathered from Internet hint a solution for data hungry problem. However, though huge amount of pictures are gathered this way, the quality of them are out of control. Many methods have been proposed to deal with this problem. Outlier removal ~\cite{Liu2014,Xia2015} improve the quality images by remove probable noise pixels. Some research proposed robust loss functions ~\cite{Volodymyr2012,NEURIPS2018_f2925f97} for replacement of traditional loss function when the datasets are noisy. Another modified training method proposed is to correct the loss computed in training process affected by noise ~\cite{Patrini2017,Veit2017}. Also, applying noise cancel strategies such as random grouping to reduce the negative effect of noise ~\cite{Zhuang2017,Zhang2019} improves the performance of training. Besides, many other methods deal with faults in datasets are proposed ~\cite{SunCY19,YaoW0T019,KrauseSHZTDPF16}.
+
 \subsection{Weak-Shot Object Detection}
+\label{section:related:weakDtct}
+Object detection aims at giving bonding boxes in images. When applying weak-shot learning to object detection, researchers try transfer information gained from datasets with bounding boxes to training based on dataset with only image labels.
+First work on this topic is Large Scale Detection through Adaptation  (LSDA)~\cite{NIPS2014_09fb05dd}. LSDA learns the difference between the two tasks and transfers this knowledge to classifiers for categories without bounding box annotated data. Many methods~\cite{KuenPLZT19,RochanW15} follow similar idea of transfering information gained from bounding box annotated data and difference between target categories.
+
 \subsection{Weak-Shot Instance Segmentation}
+\label{section:related:seg}
+Instance segmentation can be regarded as a more advanced opject detection which masks target objects rather than just box them. Applications of this kind, for example Mask RCNN~\cite{Hu2018LSET}, kind appear just recently. Weak-Shot instance segmentation transfer knowledge gained from mask annotated data to training using only box anotated data.
+Mask RCNN~\cite{Hu2018LSET} introduces a novel weight transfer function to accomplish the knowledge tranformation. ShapeMask~\cite{Kuo2019} trains a set of shape bases from mask annotations called shape priors, then applies them into training on novel categories. A more recent work~\cite{Zhou2020Sal} attempt to propagate information from its salient regions identifying module to instance segmentation module.
 
 
 \section{Our Method}
-
+%this article: "Attend in groups: a weakly-supervised deep learning framework for learning from web data"may help
 \section{Experiments}
 
 \section{Conclusion}
 
 
-{\small
+\small
 \bibliographystyle{ieee_fullname}
 \bibliography{main}
-}
+
 
 \end{document}

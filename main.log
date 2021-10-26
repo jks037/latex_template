@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.10.14)  23 OCT 2021 11:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.10.14)  27 OCT 2021 00:09
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**"d:/chh/statistical learning/projects/latex_template/main.tex"
-(d:/chh/statistical learning/projects/latex_template/main.tex
+**main
+(./main.tex
 LaTeX2e <2021-06-01> patch level 1
 L3 programming layer <2021-10-12> (d:/environments/texlive/2021/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2021/02/12 v1.4n Standard LaTeX document class
@@ -389,6 +389,7 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 31.
 LaTeX Info: Redefining \pageref on input line 31.
 LaTeX Info: Redefining \nameref on input line 31.
+ (./main.out) (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
@@ -406,35 +407,29 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removed on input line 52.
 
 
-d:/chh/statistical learning/projects/latex_template/main.tex:66: Package inputenc Error: Unicode character ^^B (U+0002)
-(inputenc)                not set up for use with LaTeX.
-
-See the inputenc package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.66 ...strated in Figure 2, our proposed frame^^B
-                                                  work employs the pairwise ...
-You may provide a definition with
-\DeclareUnicodeCharacter 
-
-
-d:/chh/statistical learning/projects/latex_template/main.tex:67: Package inputenc Error: Unicode character ^^B (U+0002)
-(inputenc)                not set up for use with LaTeX.
-
-See the inputenc package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.67 ...tegories and novel categories. The pair^^B
-                                                  wise similarity which deno...
-You may provide a definition with
-\DeclareUnicodeCharacter 
+Underfull \hbox (badness 5563) in paragraph at lines 59--60
+[]\OT1/ptm/m/n/10 Webly-supervised learn-ing is an-other cat-e-gory of
+ []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                \kern -10.0pt
-(hyperref)                removed on input line 78.
+(hyperref)                removed on input line 70.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                \kern -10.0pt
+(hyperref)                removed on input line 74.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                \kern -10.0pt
+(hyperref)                removed on input line 77.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                \kern -10.0pt
+(hyperref)                removed on input line 79.
 
 [1{d:/environments/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
@@ -443,37 +438,12 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                \kern -10.0pt
-(hyperref)                removed on input line 82.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                \kern -10.0pt
-(hyperref)                removed on input line 85.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                \kern -10.0pt
-(hyperref)                removed on input line 86.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                \kern -10.0pt
-(hyperref)                removed on input line 87.
+(hyperref)                removed on input line 83.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                \kern -10.0pt
 (hyperref)                removed on input line 88.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                \kern -10.0pt
-(hyperref)                removed on input line 89.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                \kern -10.0pt
-(hyperref)                removed on input line 92.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
@@ -485,35 +455,46 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                \kern -10.0pt
 (hyperref)                removed on input line 96.
 
-No file main.bbl.
-[2
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                \kern -10.0pt
+(hyperref)                removed on input line 98.
+
+(./main.bbl
+Underfull \vbox (badness 2050) has occurred while \output is active []
+
+
+Underfull \hbox (badness 1859) in paragraph at lines 54--59
+[]\OT1/ptm/m/n/9 Weicheng Kuo, Anelia An-gelova, Ji-ten-dra Ma-lik, and
+ []
+
+
+Underfull \vbox (badness 3068) has occurred while \output is active []
+
+ [2]
+Underfull \hbox (badness 1205) in paragraph at lines 133--138
+\OT1/ptm/m/n/9 supervised in-stance seg-men-ta-tion.  In \OT1/ptm/m/it/9 2020 IEEE/CVF
+ []
+
+) [3
 
 ] (./main.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `main.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `main.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  F3278C7BAC19B5AF569CAC2434BBE5A5;1727.
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: E0875F7FF097B974560EBF170660DF76;1523.
  ) 
 Here is how much of TeX's memory you used:
- 11181 strings out of 478599
- 168599 string characters out of 5851587
- 484357 words of memory out of 5000000
- 28877 multiletter control sequences out of 15000+600000
- 422147 words of font info for 70 fonts, out of 8000000 for 9000
+ 11282 strings out of 478599
+ 170111 string characters out of 5851587
+ 489105 words of memory out of 5000000
+ 28950 multiletter control sequences out of 15000+600000
+ 426045 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,12n,80p,930b,332s stack positions out of 5000i,500n,10000p,200000b,80000s
-{d:/environments/texlive/2021/texmf-dist/fonts/enc/dvips/base/8r.enc}<d:/environments/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><d:/environments/texlive/2021/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><d:/environments/texlive/2021/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
-Output written on main.pdf (2 pages, 47887 bytes).
+ 72i,12n,80p,2535b,468s stack positions out of 5000i,500n,10000p,200000b,80000s
+{d:/environments/texlive/2021/texmf-dist/fonts/enc/dvips/base/8r.enc}<d:/environments/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><d:/environments/texlive/2021/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><d:/environments/texlive/2021/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><d:/environments/texlive/2021/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on main.pdf (3 pages, 73157 bytes).
 PDF statistics:
- 47 PDF objects out of 1000 (max. 8388607)
- 36 compressed objects within 1 object stream
- 14 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 151 PDF objects out of 1000 (max. 8388607)
+ 136 compressed objects within 2 object streams
+ 34 named destinations out of 1000 (max. 500000)
+ 81 words of extra memory for PDF output out of 10000 (max. 10000000)
 
