@@ -32,7 +32,7 @@
 
 %%%%%%%%% TITLE
 %%%%%%%%% TITLE
-\title{A weak-shot classification practice}
+\title{A weak-shot classification practice based on generalized cross-entropy loss and modified sample weighting}
 
 
 \author{$\textnormal{Honghao Chen}^{*}$, $\textnormal{Tianyi Zhou}^{*}$\\
@@ -44,7 +44,7 @@ $^*$ Shanghai Jiao Tong University \\
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-Midterm report of Statistical Learning and Inference.
+Midterm report for Statistical Learning and Inference course.
 \end{abstract}
 
 %%%%%%%%% BODY TEXT
@@ -64,7 +64,8 @@ Weak-shot learning is one kind weakly supervised learning that utilizing auxilia
 %Considering the drawbacks of zero/few-shot learning and the accessibility of free web data, we intend to learn novel categories by virtue of web data with the support of a clean set of base categories, which is referred to as weak-shot learning as illustrated in Figure 1. Formally, given a set of novel fine-grained categories which are not associated with any clean training images, we collect web images for novel categories as weak-labeled images and meanwhile leverage the clean images from base fine-grained categories. We refer to the clean (resp., web) image set from base (resp., novel) categories as base (resp., novel) training set. The closest related work to ours is (Niu, Veeraraghavan, and Sabharwal 2018), but they further assumed the reliability of word vectors (Mikolov et al. 2013; Pennington, Socher, and Manning arXiv:2009.09197v1 [cs.CV] 19 Sep 2020 2014) as well as the availability of unlabeled test images in the training stage. In this learning scenario, the key issue of novel training set is label noise, which will significantly degrade the performance of learnt classifier (Niu, Veeraraghavan, and Sabharwal 2018; Zhuang et al. 2017; Patrini et al. 2017; Zhang, Wang, and Qiao 2019). We explore using base training set to denoise novel training set, although they have disjoint category sets. As illustrated in Figure 2, our proposed frame-work employs the pairwise semantic similarity to bridge the gap between base categories and novel categories. The pairwise similarity which denotes whether two images belong to the same category is category-agnostic, so it is highly transferable across category sets even if they are disjoint. Meanwhile, the pairwise similarity can be easily learnt fromlimited data, indicating that a small set of already annotated images could help learn extensive novel categories. Analogously, some methods (Chen et al. 2020; Oreshkin, Lopez, and Lacoste 2018) for few-shot learning transferred similarity from base categories to novel categories, which is directly used for classification. In contrast, we transfer the pairwise similarity to alleviate the label noise issue of web data. For learning from web data, some works (Sheng Guo and Huang 2018; Han, Luo, and Wang 2019) also attempted to denoise by similarity. But their similarities are derived from noisy samples (e.g., feature distances of a model pre-trained on web data), and likely to be corrupted due to noise overfitting, leading to sub-optimal results (Kuang-Huei Lee and Yang 2018; Xiao et al. 2015).
 
 % introduction to method and concludes
-In Weak-shot classification, the knowledge to transfer is the similarity trained in base data~\cite{chen2020weak}. Our proposals and results.
+In Weak-shot classification, the knowledge to transfer is the similarity trained in base data~\cite{chen2020weak}. We utilize generalized cross-entropy loss~\cite{NEURIPS2018_f2925f97} to deal with general label-noise in novel set, which is a generalized form of cross-entropy loss adding (CCE) noise-tolerate feature of mean absolute error (MAE). We also applied truncated sample weighting to effectively eliminate outliers. This weighting is modified from the prior form~\cite{chen2020weak} by treated images with largest mutual similarities equally as well-labeled ones, while excluding those with least siliarites as outliers. Mutual similarities are computed via pre-trained similarity net, which transfer the knowledge gained from base set to novel set.
+The experiments are under conducting before results' release. 
 
 
 \section{Related Works}
@@ -95,11 +96,51 @@ Mask RCNN~\cite{Hu2018LSET} introduces a novel weight transfer function to accom
 
 
 \section{Our Method}
-%this article: "Attend in groups: a weakly-supervised deep learning framework for learning from web data"may help
+We choose transfer similarity from the base training set to novel training set. Overall traning process consists of learning similarity net (SimNet) and learning classifier with the auxiliary of the trained SimNet. We follow SimilarlyTransfer~\cite{chen2020weak} when training the SimNet, and utilize SimNet and noise-robust loss function to improve the performance of classifier trained on novel data set. The first step is demonstrated in section ~\ref{section:method:simnet}, second step in section ~\ref{section:method:class}.
+
+\subsection{Learning Similarity on Fine-annotated Training Set}
+\label{section:method:simnet}
+
+\subsection{Learning Classifier on Noisy Training Set}
+\label{section:method:class}
+Due to the errors in training labels which is common for web images, the performance is far from satisfaction when train directly. According to prior study~\cite{sukhbaatar2015training}, noise can be devided into two types: outlier noise and label-flip noise. We take advantage of pre-trained similarity net to deal with outliers and apply generalized cross-entropy loss to alleviate label-flip and other noise. We will then introduce the detailed methods, \emph{i.e.} generalized cross-entropy loss and modified sample weighting.
+
+
+%\begin{itemize}
+%\item 
+%\noindent
+\subsubsection{Generalized Cross-Entropy Loss}
+\label{section:method:class:gce}
+% reference: Generalized Cross Entropy Loss for Training Deep Neural Networks with Noisy Labels
+Commonly, categorical cross entropy (CCE) loss is used in training. In cases that training set is noisy, the performance is severely affected. Former research~\cite{NEURIPS2018_f2925f97} introduces a generalize cross-entropy loss modifying the traditional CCE that add noise-tolerate feature to it.
+The idea is to combine mean absolute error (MAE) with CCE. MAE is a noise-robust alternative of CCE, however as a price of noise-toleration, it could perform poorly, especially when training set is challenging. The solution is to choose the negative Box-Cox transformation as a loss function:\begin{equation}\mathcal{L}_q = \cfrac{1}{B}\sum_{i=1}^{B}\cfrac{(1-f_{c,i}^{q}(x)_c)}{q}\label{eql:gloss} \end{equation} where $B$ is the batch size, $x_{c,i}$ is the \emph{i}-th image of the \emph{c}-th category, and $f_{c,i}(x)_c$ is its classification score corresponding to category c, $0 < q \leq 1$. It can be proved via L'Hospital's rule that it is equivalent to CCE for $lim_{q\rightarrow 0}\mathcal{L}_q$, and become MAE when $q=1$. This means Eq.~\ref{eql:gloss} is a generalization of cross entropy and MAE, using \emph{q} to indicate to which it is more similar. Thus this generalized cross entropy add noise-toleration of MAE  which is useful when training on a noisy data set. In our experiments, we empirically choose $q=0.7$.
+
+%\end{itemize}
+\subsubsection{Truncated Sample Weighting}
+\label{section:method:class:tsw}
+The transfer of knowledge gained from base set to novel set is accomplished via utilizing the pre-trained similarity net to eliminate outlier noise in novel set, following the method first propsed in the pineer work of weak-shot classification ~\cite{chen2020weak}. The plausibility that similarity can be applied to denoise infers from two trivial assumption: (1) similarity of similar fine-grained categories is almost unique; (2) outliers differs from each other while non-outliers have similar counter-parts because images belongs to the same category must look similar. The former assumption makes sure that the similarity net trained on the base data set can be applied to judge whether an image in novel set is similar to another.
+
+For the \emph{c}-th novel category, we first compute the sililarity matrix $S_c$, whose size is $N_c^n\times N_c^n$, $N_c^n$ being the number of images belongs to \emph{c}-th novel category. This is computationally efficient as it just need to be computed once for each category. Then we compute teh average of similarities between image \emph{i} and each of the rest images:\begin{equation}w_{c,i} = \cfrac{1}{N_c^n}\sum_j^{N_c^n}\cfrac{s_{c,i,j}+s_{c,j,i}}{2}.   \label{eql:simw}\end{equation} Then we normalize this average in a truncated manner as its weight:
+\begin{equation} \overline{w}_{c,i}=\begin{cases}
+    1,& \text{$w_{c,i} \geq w_{c,u}$}\\
+    w_{c,i}/w_{c,u},& \text{$w_{c,l}<w_{c,i}\leq w_{c,u}$}\\
+    0,& \text{$w_{c,i}\leq w_{c,l}$}
+\end{cases}.
+\end{equation}
+Here $w_{c,u}$ denotes a chosen upper threshold that, if $w_{c,i}$ overcome this, we regard the correspongding image is well-labeled, and all images satisfying this is treated equally. Similary, $w_{c,l}$ denotes a chosen lower threshold that, images with $w_{c,i}$ lower than $w_{c,l}$ are regarded as outliers to remove away from learning process. Images with intermediat values are normalized using the upper threshold. In experiment, we choose $w_{c,u}$ being the weight of 70-percent largest $w_{c,i}$, and $w_{c,l}$ being the 10-percent largest $w_{c,i}$. This is corresponding to an emperical assumption that 30-percent of images in the novel set can be regard as well-labled and 10-percent of them are outliers.
+
+\subsection{The Full Objective}
+\label{section:method:full}
+On the whole, the classifier is trained on novel set by generalized cross-entropy loss combined with truncated sample weighting:
+\begin{equation}\mathcal{L}_q = 
+    \cfrac{1}{B}\sum_{i=1}^{B}\overline{w}_{c,i}\cfrac{(1-f_{c,i}^{q}(x)_c)}{q}\label{eql:gloss}, \end{equation} 
+where we set $q=0.7$ empirically.
+
 \section{Experiments}
+Under conduction.
 
 \section{Conclusion}
-
+Will release after experiment accomplished.
 
 \small
 \bibliographystyle{ieee_fullname}
