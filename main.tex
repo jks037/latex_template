@@ -32,7 +32,7 @@
 
 %%%%%%%%% TITLE
 %%%%%%%%% TITLE
-\title{A weak-shot classification practice based on generalized cross-entropy loss and modified sample weighting}
+\title{A weak-shot classification practice based on modified sample weighting}
 
 
 \author{$\textnormal{Honghao Chen}^{*}$, $\textnormal{Tianyi Zhou}^{*}$\\
@@ -108,38 +108,77 @@ Ideally, the learnt similarity is category-agnostic. However, there may be domai
 
 \subsection{Learning Classifier on Noisy Training Set}
 \label{section:method:class}
-Due to the errors in training labels which is common for web images, the performance is far from satisfaction when train directly. According to prior study~\cite{sukhbaatar2015training}, noise can be devided into two types: outlier noise and label-flip noise. We take advantage of pre-trained similarity net to deal with outliers and apply generalized cross-entropy loss to alleviate label-flip and other noise. We will then introduce the detailed methods, \emph{i.e.} generalized cross-entropy loss and modified sample weighting.
+Due to the errors in training labels which is common for web images, the performance is far from satisfaction when train directly. According to prior study~\cite{sukhbaatar2015training}, noise can be devided into two types: outlier noise and label-flip noise. In our experiments, training sets consists of images collected by search engines, thus many of them are qualified. We take advantage of pre-trained similarity net to deal with these outliers, as similarity among them is a powerful property that help filter the original noisy set and get a relatively clear one. We try different weighting methods based on similarity matrix rather than applying a plain averaging. We will then introduce the detailes.
 
 
-%\begin{itemize}
-%\item 
-%\noindent
-\subsubsection{Generalized Cross-Entropy Loss}
-\label{section:method:class:gce}
-% reference: Generalized Cross Entropy Loss for Training Deep Neural Networks with Noisy Labels
-Commonly, categorical cross entropy (CCE) loss is used in training. In cases that training set is noisy, the performance is severely affected. Former research~\cite{NEURIPS2018_f2925f97} introduces a generalize cross-entropy loss modifying the traditional CCE that add noise-tolerate feature to it.
-The idea is to combine mean absolute error (MAE) with CCE. MAE is a noise-robust alternative of CCE, however as a price of noise-toleration, it could perform poorly, especially when training set is challenging. The solution is to choose the negative Box-Cox transformation as a loss function:\begin{equation}\mathcal{L}_q = \cfrac{1}{B}\sum_{i=1}^{B}\cfrac{(1-f_{c,i}^{q}(x)_c)}{q}\label{eql:gloss} \end{equation} where $B$ is the batch size, $x_{c,i}$ is the \emph{i}-th image of the \emph{c}-th category, and $f_{c,i}(x)_c$ is its classification score corresponding to category c, $0 < q \leq 1$. It can be proved via L'Hospital's rule that it is equivalent to CCE for $lim_{q\rightarrow 0}\mathcal{L}_q$, and become MAE when $q=1$. This means Eq.~\ref{eql:gloss} is a generalization of cross entropy and MAE, using \emph{q} to indicate to which it is more similar. Thus this generalized cross entropy add noise-toleration of MAE  which is useful when training on a noisy data set. In our experiments, we empirically choose $q=0.7$.
+% %\begin{itemize}
+% %\item 
+% %\noindent
+% \subsubsection{Generalized Cross-Entropy Loss}
+% \label{section:method:class:gce}
+% % reference: Generalized Cross Entropy Loss for Training Deep Neural Networks with Noisy Labels
+% Commonly, categorical cross entropy (CCE) loss is used in training. In cases that training set is noisy, the performance is severely affected. Former research~\cite{NEURIPS2018_f2925f97} introduces a generalize cross-entropy loss modifying the traditional CCE that add noise-tolerate feature to it.
+% The idea is to combine mean absolute error (MAE) with CCE. MAE is a noise-robust alternative of CCE, however as a price of noise-toleration, it could perform poorly, especially when training set is challenging. The solution is to choose the negative Box-Cox transformation as a loss function:\begin{equation}\mathcal{L}_q = \cfrac{1}{B}\sum_{i=1}^{B}\cfrac{(1-f_{c,i}^{q}(x)_c)}{q}\label{eql:gloss} \end{equation} where $B$ is the batch size, $x_{c,i}$ is the \emph{i}-th image of the \emph{c}-th category, and $f_{c,i}(x)_c$ is its classification score corresponding to category c, $0 < q \leq 1$. It can be proved via L'Hospital's rule that it is equivalent to CCE for $lim_{q\rightarrow 0}\mathcal{L}_q$, and become MAE when $q=1$. This means Eq.~\ref{eql:gloss} is a generalization of cross entropy and MAE, using \emph{q} to indicate to which it is more similar. Thus this generalized cross entropy add noise-toleration of MAE  which is useful when training on a noisy data set. In our experiments, we empirically choose $q=0.7$.
 
 %\end{itemize}
-\subsubsection{Truncated Sample Weighting}
-\label{section:method:class:tsw}
+\subsubsection{Adjusted Sample Weighting}
+\label{section:method:class:msw}
 The transfer of knowledge gained from base set to novel set is accomplished via utilizing the pre-trained similarity net to eliminate outlier noise in novel set, following the method first propsed in the pineer work of weak-shot classification ~\cite{chen2020weak}. The plausibility that similarity can be applied to denoise infers from two trivial assumption: (1) similarity of similar fine-grained categories is almost unique; (2) outliers differs from each other while non-outliers have similar counter-parts because images belongs to the same category must look similar. The former assumption makes sure that the similarity net trained on the base data set can be applied to judge whether an image in novel set is similar to another.
 
-For the \emph{c}-th novel category, we first compute the sililarity matrix $S_c$, whose size is $N_c^n\times N_c^n$, $N_c^n$ being the number of images belongs to \emph{c}-th novel category. This is computationally efficient as it just need to be computed once for each category. Then we compute teh average of similarities between image \emph{i} and each of the rest images:\begin{equation}w_{c,i} = \cfrac{1}{N_c^n}\sum_j^{N_c^n}\cfrac{s_{c,i,j}+s_{c,j,i}}{2}.   \label{eql:simw}\end{equation} Then we normalize this average in a truncated manner as its weight:
-\begin{equation} \overline{w}_{c,i}=\begin{cases}
-    1,& \text{$w_{c,i} \geq w_{c,u}$}\\
+For the \emph{c}-th novel category, we first compute the sililarity matrix $S_c$, whose size is $N_c^n\times N_c^n$, $N_c^n$ being the number of images belongs to \emph{c}-th novel category. This is computationally efficient as it just need to be computed once for each category. Then we compute teh average of similarities between image \emph{i} and each of the rest images:\begin{equation}w_{c,i} = \cfrac{1}{N_c^n}\sum_j^{N_c^n}\cfrac{s_{c,i,j}+s_{c,j,i}}{2}.   \label{eql:simw}\end{equation} Then we modify this average in different manners to enlarge the weights for clear images and to reduce weights for noisy ones.
+
+\paragraph{\textbf{Truncated manner.}} This manner assumes that when similarity average is beyond some threshold, the corresponding images are well-labeled images and treats them equally. Similarly images with average below some threshold are considered having negative impact on training and are excluded by setting their weights to zeros. For other images, we normalized them to fit the range from zero to upper threshold. Denote the trncated weight by $tw$, it can be represented as:
+\begin{equation} tw_{c,i}=\begin{cases}
+    w_{c,u},& \text{$w_{c,i} \geq w_{c,u}$}\\
     w_{c,i}/w_{c,u},& \text{$w_{c,l}<w_{c,i}\leq w_{c,u}$}\\
     0,& \text{$w_{c,i}\leq w_{c,l}$}
 \end{cases}.
+\label{eq:tr}
 \end{equation}
-Here $w_{c,u}$ denotes a chosen upper threshold that, if $w_{c,i}$ overcome this, we regard the correspongding image is well-labeled, and all images satisfying this is treated equally. Similary, $w_{c,l}$ denotes a chosen lower threshold that, images with $w_{c,i}$ lower than $w_{c,l}$ are regarded as outliers to remove away from learning process. Images with intermediat values are normalized using the upper threshold. In experiment, we choose $w_{c,u}$ being the weight of 70-percent largest $w_{c,i}$, and $w_{c,l}$ being the 10-percent largest $w_{c,i}$. This is corresponding to an emperical assumption that 30-percent of images in the novel set can be regard as well-labled and 10-percent of them are outliers.
+Here $w_{c,u}$ denotes a chosen upper threshold that, if $w_{c,i}$ overcome this, we regard the correspongding image is well-labeled, and all images satisfying this is treated equally. Similary, $w_{c,l}$ denotes a chosen lower threshold that, images with $w_{c,i}$ lower than $w_{c,l}$ are regarded as outliers to remove away from learning process. Images with intermediat values are normalized using the upper threshold. 
+
+In experiment, to choose $w_{c,u}$ and $w_{c,l}$, which represent threshold for clear images and totally noisy images respective, we perform an emperical study about the training set. First, we randomly choose 10 categories in novel sets; Then, we randomly select 100 images and manully label them to clear, noisy and intermediat; Finally, we compute the propotion of the clear images and noisy images to determine the upper and lower bound. Before labeling, we manully look up the base dataset of selected categories for precise understands. By the way, the labeled subset provides reference for evaluating the effect of weighting.
+
+\paragraph{\textbf{Quadratic manner.}} In this manner we apply quadratic function on averages. As average are non-negative, this will emphasize the larger weights and alleviate the others. Denote by $qw_{c,i}$, the weight can be computed as:
+\begin{equation} 
+    qw_{c,i}=w^2_{c,i}/C_c
+\label{eq:qua}
+\end{equation}
+Here $C_c$ is a constent normalizing the weight to a plausible range, which differs in different category.
+
+\paragraph{\textbf{Trigonometric manner.}} In this manner, we use sine function from phase $-\frac{\pi}{2}$ to $\frac{\pi}{2}$. Values of averages are rerange so that we can apply this. Different from quadratic function, it has a relatively flat section at both end of its domain. Therefore, it tends to cancel the difference among weights when they are close to maximum or minimum. In this means, trigonometric function acts similar to equation (2), and is free from manually select thresholds. Denote by $sw_{c,i}$, the modified weight can be work out by:
+\begin{equation} 
+    sw_{c,i}=C_c \times [sin(\frac{w_{c,i}-max(w_c)/2}{max(w_c)} \times \pi)+1]
+\label{eq:sin}
+\end{equation}
+Note here we assume the weights before modification is non-negative. The weights are mapped to $[-\frac{\pi}{2},\frac{\pi}{2}]$ to ensure monotonically increasement. $C_c$ is a constent for normalization.
+
+Note that these three manners use monotonically increasing functions to modify the weights computed by averages elements of similarity matrix. In experiments, we also use the original averages for contrast, represented by $w_c$. The original sample weights $w_c$ are normalized to have unit mean. The other modified weights are normalized to have identical ranges, \emph{i.e.}, maximums of $tw_c$, $qw_c$, $sw_c$ are identical and equal to $max(w_c)$ after normalization. We normalize the way for convenience of adjusting hyperparameters. Figure \ref{method:example} shows effects of modifications performed on an linear weight.  
+
+\begin{figure}[t]
+\includegraphics[width=0.47\textwidth]{figures/weight example.png}
+\caption{An example of weights after modification. We assume weights varify from 0 to 1 uniformly here for demonstration.}
+\label{method:example}
+\end{figure}
+
+\subsubsection{Selective Sample Weighting}
+In the previous section, an image is weighted high if many other images in its category are similar to it. For high-quality images, this strategy works well because images similar to them must exist and then contribute large for their weights. However, for images of lower quality, simply averaging similarities may fail because it is likely that a smaller group of similar outliers exist. Similar fail happens an image is similar to a large number of other images in a moderate level. These results in inaccurate weighting for images of moderate quality.
+
+We apply a two-step weight strategy to alleviate these negative impacts. (1) Select $n$ images which have the highest weights as well-labeled images; (2) Perform weighting in section \ref{section:method:class:msw} without modification neglecting similarities with non-selected images. Denote this type of weight by $w'_{c}$, we can compute it as:
+\begin{equation}
+    w'_{c,i}=\cfrac{1}{n}\sum_j'^{n}\cfrac{s_{c,i,j'}+s_{c,j',i}}{2}.
+\label{eq:se}
+\end{equation}
+
+
+Here $j'$ represents indexes of the selected images in the first step. The value choise of $n$ is performed in a similar process of choosing thresholds for truncated weighting, \emph{i.e.} by manually label a sampled subset of the dataset. 
 
 \subsection{The Full Objective}
 \label{section:method:full}
-On the whole, the classifier is trained on novel set by generalized cross-entropy loss combined with truncated sample weighting:
+On the whole, the classifier is trained on novel set by cross-entropy loss combined with truncated sample weighting:
 \begin{equation}\mathcal{L}_q = 
-    \cfrac{1}{B}\sum_{i=1}^{B}\overline{w}_{c,i}\cfrac{(1-f_{c,i}^{q}(x)_c)}{q}\label{eql:gloss}, \end{equation} 
-where we set $q=0.7$ empirically.
+    \cfrac{1}{B}\sum_{i=1}^{B}-\overline{w}_{c,i}logf_{c,i}(x)_c\label{eql:gloss}, \end{equation} 
+where $\overline{w}_c$ is $tw_c,qw_c,qsw_c$ or $w'_c$ corresponding to equation (2), (3), (4) and (5).
 
 \section{Experiments}
 Under conduction.
